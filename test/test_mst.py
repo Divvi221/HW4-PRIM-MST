@@ -71,4 +71,5 @@ def test_mst_student():
     TODO: Write at least one unit test for MST construction.
     
     """
+    
     pass

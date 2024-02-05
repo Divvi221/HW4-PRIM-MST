@@ -42,3 +42,24 @@ class Graph:
 
         """
         self.mst = None
+        num_nodes = len(self.adj_mat) #number of nodes
+        self.mst = np.zeros((num_nodes,num_nodes)) #initialize a graph of zeros 
+        #i decided to choose the first vertex as the starting vertex
+        list_visited = set([0]) 
+        priority_queue = []
+        #adding the first node's available edges to priority queue
+        for j in range(1, num_nodes):
+            if self.adj_mat[0][j] != 0:
+                heapq.heappush(priority_queue, (self.adj_mat[0][j],0, j)) #weight, start vertex, end vertex; here the starting vertex I chose was 0
+        while len(list_visited) < num_nodes and priority_queue:
+            weight, start, end = heapq.heappop(priority_queue)
+            if end not in list_visited:
+                self.mst[start][end] = self.mst[end][start] = weight  #add edge to the symmetric MST
+                list_visited.add(end)
+                #add new edges from the newly included vertex
+                for next in range(num_nodes): #next = next vertex
+                    if self.adj_mat[end][next] != 0 and next not in list_visited:
+                        heapq.heappush(priority_queue, (self.adj_mat[end][next], end, next))
+            
+x = Graph("data/small.csv")
+y = Graph.construct_mst(x)
