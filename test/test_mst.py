@@ -34,6 +34,16 @@ def check_mst(adj_mat: np.ndarray,
         for j in range(i+1):
             total += mst[i, j]
     assert approx_equal(total, expected_weight), 'Proposed MST has incorrect expected weight'
+    assert mst.shape == adj_mat.shape #assert that mst adjacency matrix has same dimensions as the input graph adjacency matrix
+    #assertion for num edges in mst which should be equal to N-1
+    num_edges = 0
+    for i in range(len(mst)):
+        for j in range(i+1,len(mst[i])):
+            if mst[i][j] > 0:
+                num_edges += 1
+    assert num_edges == (len(adj_mat) - 1)
+    assert num_edges >= 0
+
 
 
 def test_mst_small():
@@ -71,5 +81,19 @@ def test_mst_student():
     TODO: Write at least one unit test for MST construction.
     
     """
-    
-    pass
+    mat = np.array([[0, 2, 0, 3],
+                    [2, 0, 1, 0],
+                    [0, 1, 0, 4],
+                    [3, 0, 4, 0]])
+    x = Graph(mat)
+    mst1 = Graph.construct_mst(x)
+    total = 0
+    for i in range(x.mst.shape[0]):
+        for j in range(i+1):
+            total += x.mst[i, j]
+    assert total == 6 #expected weight = 6
+    dif = mat - x.mst
+    for elem in dif:
+        for j in elem:
+            print(j)
+            assert j in mat #ensure that all elements in the mst are from the og matrix
